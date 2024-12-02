@@ -17,7 +17,7 @@ In addition to Amazon EventBridge, event-driven applications can also be develop
 In this module you will start to build on a simple pub/sub implementation using Amazon SNS as our publishing service and Amazon SQS as a subscriber (you will use the queue to validate message delivery). We will build on this architectural style over the course of the module, and introduce more features that allow us to take advantage of message filtering and advance message filtering.
 
 
-## Simple pub/sub
+## 1. Simple pub/sub
 ![img](https://github.com/Awadheshks/Event-Driven-Architecture/blob/bef5cf0158c2656e80f5843379b1b59532dc22bf/assets/Event-driven%20with%20SNS/pub-sub.png)
 
 
@@ -76,7 +76,7 @@ The following example shows the ID, Sent, Size and Receive Count columns.
 You have successfully published a message to an SNS topic and verified that it was sent to the SQS queue subscription. 
 
 
-## Next Section - Message Filtering
+## 2. Message Filtering
 ### What is Amazon SNS message filtering?
 
 ![img](https://github.com/Awadheshks/Event-Driven-Architecture/blob/2b57d9a0327c80cd6092c1cb968f793a14ccc338/assets/Event-driven%20with%20SNS/MessageFiltering.png)
@@ -222,3 +222,126 @@ Choose Publish message to publish the message to the Orders SNS topic.
 
 ![img](https://github.com/Awadheshks/Event-Driven-Architecture/blob/2b57d9a0327c80cd6092c1cb968f793a14ccc338/assets/Event-driven%20with%20SNS/MF-VerifyMsgDlvry.png)
 You have successfully used subscription filters to route messages published to an SNS topic subscription and verified that it was sent to the correct SQS queue. 
+
+
+## 3. Advance Message Filtering
+In the previous section, you explored basic message filtering using string comparisons and demonstrated the SNS routing behavior using various message attribute configurations to verify message delivery. Next, you will expand on basic message filtering using additional comparison techniques and use numeric comparisons to route extra large Orders (quantity is 100 or greater).
+
+#### Step 1: Create the Orders-XL SQS queue
+Create an Amazon SQS queue, called Orders-XL, to durably store XL Order messages.
+
+1. Open the AWS Management Console for SQS,choose Create New Queue at the top of your queue list.
+2. Enter a queue name Orders-XL,select Standard Queue for the type of queue you want to configure.
+3. Choose Create queue,The Orders-XL queue is created.
+
+   ![img](https://github.com/Awadheshks/Event-Driven-Architecture/blob/2b57d9a0327c80cd6092c1cb968f793a14ccc338/assets/Event-driven%20with%20SNS/MF-VerifyMsgDlvry.png)
+
+#### Step 2: Subscribe the Orders-XL SQS queue to the Orders SNS topic
+1. From the list of queues, choose the Orders-XL queue to which to subscribe the Orders Amazon SNS topic.
+2. Select Subscribe to Amazon SNS Topic.
+3. From the Choose a Topic drop-down list, select the Orders topic to which to subscribe the Orders-XL queue, and then choose Save.
+4. Verify that the Orders-XL SQS queue is successfully subscriber to the Orders SNS Topic and choose OK.
+
+   ![img](https://github.com/Awadheshks/Event-Driven-Architecture/blob/2b57d9a0327c80cd6092c1cb968f793a14ccc338/assets/Event-driven%20with%20SNS/MF-VerifyMsgDlvry.png)
+The queue is subscribed to the topic.
+
+#### Step 3: Create Orders-XL subscription filter policy
+1. Open the AWS Management Console for SNS,from the list of topics, choose the Orders topic.
+2. In the search box, enter Orders-XL to find the Orders-XL SQS queue subscription.
+3. Select the Orders-XL subscription and then choose Edit.
+4. On the Edit subscription page, expand the Subscription filter policy section.
+5. Select Message Attributes, then in the JSON editor field, paste the following filter policy into the JSON editor.
+   {
+  "quantity": [
+    {
+      "numeric": [">=", 100]
+    }
+  ]
+   }
+ 6. Choose Save changes.
+
+    ![img](https://github.com/Awadheshks/Event-Driven-Architecture/blob/2b57d9a0327c80cd6092c1cb968f793a14ccc338/assets/Event-driven%20with%20SNS/MF-VerifyMsgDlvry.png)
+
+    Amazon SNS applies your filter policy to the subscription.
+
+    In this section, you will combine an EU string prefix comparison with the XL numeric comparison to route extra large, EU Orders using an AND comparison.
+
+#### Step 4: Create the Orders-XL-EU SQS queue
+Create an Amazon SQS queue, called Orders-XL-EU, to durably store XL EU Order messages.
+1. Open the AWS Management Console for SQS,choose Create New Queue at the top of your queue list.
+2. Enter a queue name Orders-XL-EU,select Standard Queue for the type of queue you want to configure.
+3. Choose Create queue,The Orders-XL-EU queue is created.
+
+ ![img](https://github.com/Awadheshks/Event-Driven-Architecture/blob/2b57d9a0327c80cd6092c1cb968f793a14ccc338/assets/Event-driven%20with%20SNS/MF-VerifyMsgDlvry.png)
+
+#### Step 5: Subscribe the Orders-XL-EU SQS queue to the Orders SNS Topic
+1. From the list of queues, choose the Orders-XL-EU queue to which to subscribe the Orders Amazon SNS topic.
+2. From Queue Actions, select Subscribe Queue to SNS Topic.
+3. From the Choose a Topic drop-down list, select the Orders topic to which to subscribe the Orders-XL-EU queue, and then choose Subscribe.
+4. Verify that the Orders-XL-EU SQS queue is successfully subscribed to the Orders SNS Topic.
+
+  ![img](https://github.com/Awadheshks/Event-Driven-Architecture/blob/2b57d9a0327c80cd6092c1cb968f793a14ccc338/assets/Event-driven%20with%20SNS/MF-VerifyMsgDlvry.png)
+
+   The queue is subscribed to the topic.
+
+#### Step 6: Create Orders-XL-EU subscription filter policy
+1. Open the AWS Management Console for SNS  in a new tab or window, so you can keep this step-by-step guide open.
+2. From the list of topics, choose the Orders topic.
+3. In the search box, enter Orders-XL-EU to find the Orders-XL-EU SQS queue subscription.
+4. Select the Orders-XL-EU subscription and then choose Edit.
+5. On the Edit subscription page, expand the Subscription filter policy section.
+6. In the JSON editor field, paste the following filter policy into the JSON editor.
+   {
+  "location": [
+    { "prefix": "eu" }
+  ],
+  "quantity": [
+    {
+      "numeric": [">=", 100]
+    }
+  ]
+}
+
+7. Choose Save changes.
+
+   ![img](https://github.com/Awadheshks/Event-Driven-Architecture/blob/2b57d9a0327c80cd6092c1cb968f793a14ccc338/assets/Event-driven%20with%20SNS/MF-VerifyMsgDlvry.png)
+
+   Amazon SNS applies your filter policy to the subscription.
+
+#### Step 7: Publish test messages using the Publish message function
+1. Select the Topics in the left pane of the Amazon SNS service.
+2. Select Orders topic from the list of Topics.
+3. Click on Publish message.
+
+   ![img](https://github.com/Awadheshks/Event-Driven-Architecture/blob/2b57d9a0327c80cd6092c1cb968f793a14ccc338/assets/Event-driven%20with%20SNS/MF-VerifyMsgDlvry.png)
+
+#### Message 1: Non-matching numeric message attributes
+1. Choose Add attribute.
+2. For the Message attribute, select type Number. For the attribute Name, enter quantity. For the attribute Value, enter 50.
+3. Choose Publish message to publish the message to the Orders SNS topic.
+
+   ![img](https://github.com/Awadheshks/Event-Driven-Architecture/blob/2b57d9a0327c80cd6092c1cb968f793a14ccc338/assets/Event-driven%20with%20SNS/MF-VerifyMsgDlvry.png)
+
+#### Message 2: Matching numeric message attributes
+1. For the Quantity attribute, enter 100.
+2. Choose Publish message to publish the message to the Orders SNS topic.
+
+   PIC
+
+#### Message 3: Matching AND comparison message attributes
+1. Choose Add attribute.
+2. For the attribute Type, select as String. For the attribute Name, enter location. For the attribute Value, enter eu-west.
+3. Choose Publish message to publish the message to the Orders SNS topic.
+
+   ![img](https://github.com/Awadheshks/Event-Driven-Architecture/blob/2b57d9a0327c80cd6092c1cb968f793a14ccc338/assets/Event-driven%20with%20SNS/MF-VerifyMsgDlvry.png)
+
+
+#### Step 8: Verify message delivery
+1. Open the AWS Management Console for SQS  in a new tab or window, so you can keep this step-by-step guide open.
+2. Observe the list of Messages Available for the queues.
+ - The OrdersQueue queue shows 3 messages delivered, because the Orders subscription has no filter policy.
+ - The Orders-EU queue shows 1 message delivered, because one message was published with location = eu-west.
+ - The Orders-XL queue shows 2 messages delivered, because two messages were published with quantity = 100.
+ - The Orders-XL-EU queue shows 1 message delivered, because one message was published with quantity = 100 AND location = eu-west.
+   
+You have successfully used subscription filters to route messages published to an SNS topic subscription and verified that it was sent to the correct SQS queue

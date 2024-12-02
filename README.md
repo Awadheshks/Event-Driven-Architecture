@@ -79,6 +79,7 @@ You have successfully published a message to an SNS topic and verified that it w
 ## Next Section - Message Filtering
 ### What is Amazon SNS message filtering?
 
+![img](https://github.com/Awadheshks/Event-Driven-Architecture/blob/2b57d9a0327c80cd6092c1cb968f793a14ccc338/assets/Event-driven%20with%20SNS/MessageFiltering.png)
 
 By default, an Amazon SNS topic subscriber receives every message published to the topic. To receive a subset of the messages, a subscriber must assign a filter policy to the topic subscription.
 
@@ -101,14 +102,14 @@ Create an Amazon SQS queue, called Orders-EU, to durably store EU Order messages
 2. Enter a queue name Orders-EU,select Standard Queue for the type of queue you want to configure.
 3. Choose Create queue.
 
-PIC Create Queue
+![img](https://github.com/Awadheshks/Event-Driven-Architecture/blob/2b57d9a0327c80cd6092c1cb968f793a14ccc338/assets/Event-driven%20with%20SNS/MF-Queuecreation.png)
 
 #### Step 2: Subscribe the Orders-EU SQS queue to the Orders SNS topic
 1. On details screen, select Subscribe to Amazon SNS topic.
 2. From the Choose a Topic drop-down list, select the Orders topic to which to subscribe the Orders-EU queue, and then choose Subscribe.
 3. Verify that the Orders-EU SQS queue is successfully subscribed to the Orders SNS Topic.
 
-   PIC
+   ![img](https://github.com/Awadheshks/Event-Driven-Architecture/blob/2b57d9a0327c80cd6092c1cb968f793a14ccc338/assets/Event-driven%20with%20SNS/MF-SNSTopic.png)
 
    The queue is subscribed to the topic.
 
@@ -124,9 +125,7 @@ PIC Create Queue
    ]
   }
 
-
-
-PIC
+![img](https://github.com/Awadheshks/Event-Driven-Architecture/blob/2b57d9a0327c80cd6092c1cb968f793a14ccc338/assets/Event-driven%20with%20SNS/MF-EUOrderAttribute.png)
 
 6. Choose Save changes.
    Amazon SNS applies your filter policy to the subscription.
@@ -142,16 +141,14 @@ Create an Amazon SQS queue, called BookOrders, to durably store book orders mess
 2. Enter a queue name BookOrders,select Standard Queue for the type of queue you want to configure.
 3. Choose Create queue.
 
-   PIC
+   ![img](https://github.com/Awadheshks/Event-Driven-Architecture/blob/2b57d9a0327c80cd6092c1cb968f793a14ccc338/assets/Event-driven%20with%20SNS/MF-BookOrders.png)
 
 
 #### Step 2: Subscribe the BookOrders SQS queue to the Orders SNS topic
 1. On details screen, select Subscribe to Amazon SNS topic.
 2. From the Choose a Topic drop-down list, select the Orders topic to which to subscribe the BooksOrders queue, and then choose Save.
 3. Verify that the BookOrders SQS queue is successfully subscribed to the Orders SNS Topic.
-
- PIC
-
+ 
  The queue is subscribed to the topic.
 
 #### Step 3: Create BookOrdersBody subscription filter policy
@@ -164,11 +161,13 @@ Create an Amazon SQS queue, called BookOrders, to durably store book orders mess
   "category": ["books"]
   }
 
+  ![img](https://github.com/Awadheshks/Event-Driven-Architecture/blob/2b57d9a0327c80cd6092c1cb968f793a14ccc338/assets/Event-driven%20with%20SNS/MF-BookOrdersBody.png)
+
+
 6. Choose Save changes.
 
-Amazon SNS applies your filter policy to the subscription.
 
-### Review:
+### Let's Review:
 1. The OrdersQueue subscription does not have a filter policy, so the OrdersQueue SQS queue will receive all messages sent to the Orders SNS topic.
 
 2. The Orders-EU subscription has a message attribute filter policy, so the Orders-EU SQS queue will only receive messages with a message attribute, location, with a value of eu-west.
@@ -182,16 +181,18 @@ Test the system behavior by publishing different messages to the Orders SNS topi
 
 #### Message 1: No message attributes, plain text body
 1. Choose Publish message to publish a test message to the Orders SNS topic.
-   PIC
+   ![img](https://github.com/Awadheshks/Event-Driven-Architecture/blob/2b57d9a0327c80cd6092c1cb968f793a14ccc338/assets/Event-driven%20with%20SNS/MF-Msg1.png)
 
 #### Message 2: Non-matching message attributes, plain text body
 1. For the attribute Type, select String. For the attribute Name, enter location. For the attribute Value, enter us-west.
 2. Choose Publish message to publish the message to the Orders SNS topic.
 
-PIC
+![img](https://github.com/Awadheshks/Event-Driven-Architecture/blob/2b57d9a0327c80cd6092c1cb968f793a14ccc338/assets/Event-driven%20with%20SNS/MF-Msg2.png)
+
 
 #### Message 3: Matching message attributes, plain text body
 For the attribute Type, leave the selection as String. For the attribute Name, enter location. For the attribute Value, enter eu-west.
+![img](https://github.com/Awadheshks/Event-Driven-Architecture/blob/2b57d9a0327c80cd6092c1cb968f793a14ccc338/assets/Event-driven%20with%20SNS/MF-Msg3.png)
 
 Choose Publish message to publish the message to the Orders SNS topic.
 
@@ -202,13 +203,15 @@ Choose Publish message to publish the message to the Orders SNS topic.
     "value": 555
 }
 2. Choose Publish message to publish the message to the Orders SNS topic.
-   PIC
+   ![img](https://github.com/Awadheshks/Event-Driven-Architecture/blob/2b57d9a0327c80cd6092c1cb968f793a14ccc338/assets/Event-driven%20with%20SNS/MF-Msg4.png)
+
 
 #### Message 5: No message attributes, JSON text body with a matching "books" category
 1. Do not add any attributes (delete any existing attributes) and enter the following JSON for the message body:
    {
   "category": "books",
   "value": 70
+![img](https://github.com/Awadheshks/Event-Driven-Architecture/blob/2b57d9a0327c80cd6092c1cb968f793a14ccc338/assets/Event-driven%20with%20SNS/MF-Msg5.png)
 
 2. Choose Publish message to publish the message to the Orders SNS topic.
 
@@ -217,5 +220,5 @@ Choose Publish message to publish the message to the Orders SNS topic.
 1. Open the AWS Management Console for SQS  in a new tab or window, so you can keep this step-by-step guide open.
 2. Note that the Orders queue shows 5 messages delivered, the Orders-EU queue only shows 1 message delivered and the BookOrders queue shows 1 message.
 
-   PIC
+![img](https://github.com/Awadheshks/Event-Driven-Architecture/blob/2b57d9a0327c80cd6092c1cb968f793a14ccc338/assets/Event-driven%20with%20SNS/MF-VerifyMsgDlvry.png)
 You have successfully used subscription filters to route messages published to an SNS topic subscription and verified that it was sent to the correct SQS queue. 

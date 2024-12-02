@@ -315,6 +315,6 @@ Amazon SNS applies your filter policy to the subscription.
  - The Orders-XL queue shows 2 messages delivered, because two messages were published with quantity = 100.
  - The Orders-XL-EU queue shows 1 message delivered, because one message was published with quantity = 100 AND location = eu-west.
 
-![img]( ![img](https://github.com/Awadheshks/Event-Driven-Architecture/blob/d95c3961517f4e31077e5c1803c37c8c79a00d45/assets/Event-driven%20with%20SNS/AMF-VerifyMsgDelivery.png)
+![img](https://github.com/Awadheshks/Event-Driven-Architecture/blob/d95c3961517f4e31077e5c1803c37c8c79a00d45/assets/Event-driven%20with%20SNS/AMF-VerifyMsgDelivery.png)
 
 ** Successfully used subscription filters to route messages published to an SNS topic subscription and verified that it was sent to the correct SQS queue.

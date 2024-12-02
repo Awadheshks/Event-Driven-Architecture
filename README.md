@@ -1,15 +1,11 @@
-# Event-Driven-Architecture
-![img](https://github.com/Awadheshks/Event-Driven-Architecture/blob/4793d116243f32bfb344fc3a7e53021fcd4b0c7b/assets/EventBridge.png)
-
-
-#### Event Driven Architecture Hands-On on "Event-driven with SNS"
-1. Simple pub/sub
-2. Message filtering
-3. Advanced message filtering
+# Event Driven Architecture Hands-On
 
    
 ## Event-driven with SNS
 Event-driven applications can be built using Amazon Simple Notification Service (SNS) alongside Amazon EventBridge. Amazon SNS is ideal for scenarios requiring high throughput or low latency messaging between applications or microservices, as it supports virtually unlimited throughput. It's also well-suited for applications demanding extensive fan-out to thousands or millions of endpoints. Messages in Amazon SNS are unstructured and can be formatted as needed.
+1. Simple pub/sub
+2. Message filtering
+3. Advanced message filtering
 
 ## 1. Simple pub/sub
 ![img](https://github.com/Awadheshks/Event-Driven-Architecture/blob/bef5cf0158c2656e80f5843379b1b59532dc22bf/assets/Event-driven%20with%20SNS/pub-sub.png)
